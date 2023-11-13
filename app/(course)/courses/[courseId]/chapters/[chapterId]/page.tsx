@@ -5,6 +5,11 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 import { VideoPlayer } from './_components/video-player';
 import { CourseEnrollButton } from './_components/course-enroll-button';
+import { Separator } from '@/components/ui/separator';
+import { Preview } from '@/components/preview';
+import { File } from 'lucide-react';
+import { CourseProgress } from '@/components/coruse-progress';
+import { CourseProgressButton } from './_components/course-progress-button';
 
 export default async function ChapterIdPage ({
     params
@@ -63,7 +68,12 @@ export default async function ChapterIdPage ({
             </h2>
             {purchase ? (
               <h2>
-                @
+                <CourseProgressButton
+                  chapterId={params.chapterId}
+                  courseId={params.courseId}
+                  nextChapterId={nextChapter?.id}
+                  isCompleted={!!userProgress?.isCompleted}
+                />
               </h2>
             ) : (
               <CourseEnrollButton
@@ -72,6 +82,32 @@ export default async function ChapterIdPage ({
               />
             )}
           </div>
+          <Separator/>
+          <div>
+            <Preview
+             value={chapter.description!}
+            />
+          </div>
+          {!!attachments.length && (
+            <>
+              <Separator/>
+              <div className='p-4'>
+                {attachments.map((attachment) => (
+                  <a 
+                    href={attachment.url} 
+                    key={attachment.id} 
+                    target='_blank' 
+                    className='flex items-center p-3 w-full bg-sky-200 border text-sky-700 rounded-md hover:underline'
+                  > 
+                    <File/>
+                    <p className='line-clamp-1'>
+                      {attachment.name}
+                    </p>
+                  </a>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
